@@ -10,4 +10,5 @@
 - Read about pods: https://kubernetes.io/docs/concepts/workloads/pods/
 - Read about Replicasets: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
 - https://www.mirantis.com/blog/kubernetes-replication-controller-replica-set-and-deployments-understanding-replication-options
+- Service Discovery is an important feature of K8s. Learn more by reading the following article.
 
