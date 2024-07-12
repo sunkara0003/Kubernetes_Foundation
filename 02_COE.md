@@ -21,3 +21,5 @@
 - It is open source, huge community driven.
 ## negatives of k8s
 - it is really complex to setup and documentation
+- made easy with kubeadm,kubespray tools
+- It is non native approach.To use containers we need to learn new tools like docker cli,kubelets.
