@@ -39,5 +39,30 @@
 - The Minikube CLI provides basic bootstrapping operations for working with your cluster, including start, stop, status, and delete.
 
 # Working with Minikube works in single node
+## Create a Deployment 
+**Pod:** A Kubernetes Pod is a group of one or more Containers, tied together for the purposes of administration and networking.
+**Deployments:** A Kubernetes Deployment checks on the health of your Pod and restarts the Pod's Container if it terminates. Deployments are the recommended way to manage the creation and scaling of Pods.
+**Steps:**
+1. Use the kubectl create command to create a Deployment that manages a Pod. The Pod runs a Container based on the provided Docker image.
+    Run a test container image that includes a webserver.output: deployment.apps/hello-node created
+   ``` sh
+kubectl create deployment hello-node --image=registry.k8s.io/e2e-test-images/agnhost:2.39 -- /agnhost netexec --http-port=8080
+  ```
+  To view the created deployment in the dashboard runt the command below.
+  ```sh
+minikube dashboard --url
+```
+
+View in Dashboard
+
+![image](https://github.com/user-attachments/assets/9329e206-614c-4743-a31e-eb4e2d52f2e6)
+
+
+2. 
+
+
+
+
+
 
 
