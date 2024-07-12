@@ -49,6 +49,40 @@ docker rm <container_id>
 Docker labs:
 https://kubernetes-tutorial.schoolofdevops.com/operating-docker-containers/
 
+Docker contianer managing and monitoring running which are running local host and upgraded version has much more features
+https://docs.portainer.io/start/install-ce/server/docker/linux
+
+Cloning github for premethues stack
+```sh
+git clone https://github.com/vegasbrianc/prometheus.git
+```
+create container form the images
+```sh
+docker-compose up -d
+```
+list the containers running
+```sh
+docker ps -l
+```
+build an image with this source code
+https://github.com/schoolofdevops/facebooc/tree/master
+create a Dockerfile 
+```sh
+FROM ubuntu
+
+WORKDIR /opt/facebooc
+
+RUN apt-get update && apt-get install -yq build-essential make libsqlite3-dev sqlite3
+
+COPY . /opt/facebooc
+
+RUN make all
+
+EXPOSE 16000
+
+CMD "bin/facebooc"
+```
+
 
 
 
