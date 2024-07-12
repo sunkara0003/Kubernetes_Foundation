@@ -19,3 +19,5 @@
 - It is battle hard. Manages 1000s of containers.
 - It is not limited to containers, other solutions like redhat openshift uses K8s.
 - It is open source, huge community driven.
+## negatives of k8s
+- it is really complex to setup and documentation
