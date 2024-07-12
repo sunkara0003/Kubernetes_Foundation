@@ -16,3 +16,4 @@
 - Fault Tolerence if container goes down it will re-provision the containers/pods on other host/servers.
 - Stateless using persistant volumes, Databases.
 - It was created by Google. Inspirated by google infrastructures management.
+- It is battle hard. Manages 1000s of containers.
