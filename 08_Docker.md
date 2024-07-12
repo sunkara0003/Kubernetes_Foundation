@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/edafb865-56a0-4d0d-b89a-3df3130181c7)# Docker Foundation
+# Docker Foundation
 The URL for docker related stuff playing remotely login with gmail
 https://labs.play-with-docker.com/p/cq8nfc2im2rg00e3bns0#cq8nfc2i_cq8nfdqim2rg00e3bnsg
 - Docker for containerization of applications
