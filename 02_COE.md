@@ -17,3 +17,5 @@
 - Stateless using persistant volumes, Databases.
 - It was created by Google. Inspirated by google infrastructures management.
 - It is battle hard. Manages 1000s of containers.
+- It is not limited to containers, other solutions like redhat openshift uses K8s.
+- It is open source, huge community driven.
