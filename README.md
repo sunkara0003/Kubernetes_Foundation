@@ -9,4 +9,9 @@
 1. Swarm is more easy to create and manage containers, Container Clusters.
 2. K8s is robust, feature rich.More usecases in industry standards.
 3. Mesos is not purely Container orchestration engine. Its like a pool of jobs submitted to  cluster of similar types cron jobs,container jobs,apache jobs etc.
-4. 
+
+# Features of COE- Container Orchestration Engine:
+- K8s gives container as a service.It can built on top of a cloud. Easy to work on deployments.
+- Dynamic provisioning infrastructure as load grows.Horizontal scaling is also useful with K8s.
+- Fault Tolerence if container goes down it will re-provision the containers/pods on other host/servers.
+- Stateless using persistant volumes, Databases.
