@@ -19,3 +19,5 @@ One container one pod, One application one container.
 ![image](https://github.com/user-attachments/assets/7d9288bc-541c-4af7-82eb-1d03c4dd34ae)
 
 ![image](https://github.com/user-attachments/assets/0e7a01f2-ad3d-4607-992f-098f4b5bcbb4)
+
+![image](https://github.com/user-attachments/assets/2f61d528-3e7c-4994-98a4-27a7de71cebf)
