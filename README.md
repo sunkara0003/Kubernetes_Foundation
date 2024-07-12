@@ -237,6 +237,18 @@ minikube service hello-node
 minikube addons list
 ```
 
+## Clean up
+Now you can clean up the resources you created in your cluster:
+```sh
+kubectl delete service hello-node
+kubectl delete deployment hello-node
+```
+
+Stop the Minikube cluster
+```sh
+minikube stop
+```
+
 
 
 
