@@ -60,6 +60,7 @@ https://www.youtube.com/watch?v=k3iexxiYPI8
 
 # Kubernetes cluster setup on digitalocean
 - create 3 nodes and add the this script in userdata
+- https://gist.github.com/initcron/40b71211cb693f541ce35fe3fb1adb11
 ```sh
 #!/bin/bash 
 
@@ -109,7 +110,107 @@ sudo rm -rf /var/lib/kubelet/*
 sudo apt-get install nfs-common -y
 ```
 
+Faced many issues below is resolution
+```sh
+echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list
 
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
+sudo apt update
+
+sudo apt install -y kubelet kubeadm kubectl
+```
+
+Encountered many issues
+```sh
+[preflight] Running pre-flight checks
+error execution phase preflight: [preflight] Some fatal errors occurred:
+	[ERROR CRI]: container runtime is not running: output: time="2024-07-13T13:05:42Z" level=fatal msg="validate service connection: validate CRI v1 runtime API for endpoint \"unix:///var/run/containerd/containerd.sock\": rpc error: code = Unimplemented desc = unknown service runtime.v1.RuntimeService"
+, error: exit status 1
+[preflight] If you know what you are doing, you can make a check non-fatal with `--ignore-preflight-errors=...`
+To see the stack trace of this error execute with --v=5 or higher
+```
+Resolution
+
+```sh
+echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
+sudo apt update
+
+sudo apt install -y kubelet kubeadm kubectl
+
+```
+
+Another issue
+```sh
+root@kube-01:~# apt remove containerd
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+Package 'containerd' is not installed, so not removed
+0 upgraded, 0 newly installed, 0 to remove and 4 not upgraded.
+root@kube-01:~#  apt update, apt install containerd.io
+E: Invalid operation update,
+root@kube-01:~# kubeadm init --apiserver-advertise-address 139.59.87.129 --pod-network-cidr=192.168.0.0/16^C
+root@kube-01:~# apt install containerd.io
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+containerd.io is already the newest version (1.7.18-1).
+0 upgraded, 0 newly installed, 0 to remove and 4 not upgraded.
+root@kube-01:~# rm /etc/containerd/config.toml
+root@kube-01:~# systemctl restart containerd
+root@kube-01:~# kubeadm init --apiserver-advertise-address 139.59.87.129 --pod-network-cidr=139.59.87.1/16
+[init] Using Kubernetes version: v1.30.2
+[preflight] Running pre-flight checks
+[preflight] Pulling images required for setting up a Kubernetes cluster
+[preflight] This might take a minute or two, depending on the speed of your internet connection
+[preflight] You can also perform this action in beforehand using 'kubeadm config images pull'
+W0713 13:07:49.405527   11433 checks.go:844] detected that the sandbox image "registry.k8s.io/pause:3.8" of the container runtime is inconsistent with that used by kubeadm.It is recommended to use "registry.k8s.io/pause:3.9" as the CRI sandbox image.
+[certs] Using certificateDir folder "/etc/kubernetes/pki"
+[certs] Generating "ca" certificate and key
+```
+
+### Resolution:
+```sh
+    [init] Using Kubernetes version: v1.24.1
+    [preflight] Running pre-flight checks
+    error execution phase preflight: [preflight] Some fatal errors occurred:
+            [ERROR CRI]: container runtime is not running: output: time="2023-01-19T15:05:35Z" level=fatal msg="validate service connection: CRI v1 runtime API is not implemented for endpoint \"unix:///var/run/containerd/containerd.sock\": rpc error: code = Unimplemented desc = unknown service runtime.v1.RuntimeService"
+    , error: exit status 1
+    [preflight] If you know what you are doing, you can make a check non-fatal with `--ignore-preflight-errors=...`
+    To see the stack trace of this error execute with --v=5 or higher
+```
+### Solution:
+By searching the web it appears this is an issue with the old containerd provided by Ubuntu 20.
+I solved it with the following steps (as root):
+1. Set up the Docker repository as described in https://docs.docker.com/engine/install/ubuntu/#set-up-the-repository
+2. Remove the old containerd:apt remove containerd
+3. Update repository data and install the new containerd: apt update, apt install containerd.io
+4. Remove the installed default config file: rm /etc/containerd/config.toml
+5. Restart containerd: systemctl restart containerd
+```
+
+**issue:**
+ kubectl get nodes 
+E0713 13:15:57.697420   15834 memcache.go:265] couldn't get current server API group list: Get "http://localhost:8080/api?timeout=32s": dial tcp [::1]:8080: connect: connection refused
+E0713 13:15:57.697839   15834 memcache.go:265] couldn't get current server API group list: Get "http://localhost:8080/api?timeout=32s": dial tcp [::1]:8080: connect: connection refused
+E0713 13:15:57.699588   15834 memcache.go:265] couldn't get current server API group list: Get "http://localhost:8080/api?timeout=32s": dial tcp [::1]:8080: connect: connection refused
+E0713 13:15:57.700370   15834 memcache.go:265] couldn't get current server API group list: Get "http://localhost:8080/api?timeout=32s": dial tcp [::1]:8080: connect: connection refused
+E0713 13:15:57.701691   15834 memcache.go:265] couldn't get current server API group list: Get "http://localhost:8080/api?timeout=32s": dial tcp [::1]:8080: connect: connection refused
+The connection to the server localhost:8080 was refused - did you specify the right host or port?
+
+
+**Resolution:**
+```
+#On the control plane server configure kubectl using commands in the output and you are all set:
+
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+``
 
 
 
